@@ -44,8 +44,16 @@ When a new construct instance is created, it calls the class's `init` method wit
 
 ### Calling base methods
 
-Call base methods with <code>this._super</code>.  The following overwrites person
-to provide a more 'classy' greating:
+Call base methods either by calling [apply](https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function/Apply)
+on the prototype method:
+
+    Person("ClassyPerson", {
+      speak : function(){
+        return "Salutations, " + Person.prototype.speak.apply(this, arguments);
+      }
+    });
+
+Or when using the [can.Construct.super] plugin with <code>this._super</code>:
 
     Person("ClassyPerson", {
       speak : function(){
@@ -58,9 +66,9 @@ to provide a more 'classy' greating:
 
 ### Proxies
 
-Class's callback method returns a function that has 'this' set appropriately (similar to [$.proxy](http://api.jquery.com/jQuery.proxy/)).  The following creates a clicky class that counts how many times it was clicked:
+Use the [can.Construct.proxy] plugin to create a function that has 'this' set appropriately (similar to [jQuery.proxy](http://api.jquery.com/jQuery.proxy/)). The following creates a clicky class that counts how many times it was clicked:
 
-    $.Class("Clicky",{
+    can.Construct("Clicky",{
       init : function(){
         this.clickCount = 0;
       },
@@ -68,7 +76,7 @@ Class's callback method returns a function that has 'this' set appropriately (si
         this.clickCount++;
       },
       listen: function(el){
-        el.click( this.callback('clicked') );
+        el.click( this.proxy('clicked') );
       }
     })
     
@@ -78,17 +86,20 @@ Class's callback method returns a function that has 'this' set appropriately (si
 
 ### Static Inheritance 
 
-Class lets you define inheritable static properties and methods.  The following allows us to retrieve a person instance from the server by calling <code>Person.findOne(ID, success(person) )</code>.  Success is called back with an instance of Person, which has the <code>speak</code> method.
+Construct lets you define inheritable static properties and methods.  The following allows us to retrieve a person instance from the server by calling <code>Person.findOne(ID, success(person) )</code>.  Success is called back with an instance of Person, which has the <code>speak</code> method.
 
-    $.Class("Person",{
+    can.Construct("Person",{
       findOne : function(id, success){
-        $.get('/person/'+id, function(attrs){
+        can.ajax({
+            url : '/person/'+id,
+            method : 'GET'
+		}).done(function(attrs){
           success( new Person( attrs ) );
-        },'json')
+        })
       }
     },{
       init : function(attrs){
-        $.extend(this, attrs)
+        can.extend(this, attrs)
       },
       speak : function(){
         return "I am "+this.name+".";
@@ -101,29 +112,30 @@ Class lets you define inheritable static properties and methods.  The following 
 
 ### Introspection
 
-Class provides namespacing and access to the name of the class and namespace object:
+Construct provides namespacing and access to the name of the class and namespace object:
 
-    $.Class("Jupiter.Person");
+    can.Construct("Bitovi.Person");
 
-    Jupiter.Person.shortName; //-> 'Person'
-    Jupiter.Person.fullName;  //-> 'Jupiter.Person'
-    Jupiter.Person.namespace; //-> Jupiter
+    Bitovi.Person.shortName; //-> 'Person'
+    Bitovi.Person.fullName;  //-> 'Bitovi.Person'
+    Bitovi.Person.namespace; //-> Bitovi
     
-    var person = new Jupiter.Person();
+    var person = new Bitovi.Person();
     
-    person.Class.shortName; //-> 'Person'
+    person.constructor.shortName; //-> 'Person'
 
 ### Model example
 
 Putting it all together, we can make a basic ORM-style model layer.  Just by inheriting from Model, we can request data from REST services and get it back wrapped in instances of the inheriting Model.
 
-    $.Class("Model",{
+    can.Construct("Model",{
       findOne : function(id, success){
-        $.get('/'+this.fullName.toLowerCase()+'/'+id, 
-          this.callback(function(attrs){
-             success( new this( attrs ) );
-          })
-        },'json')
+        can.ajax({
+            url : '/'+this.fullName.toLowerCase()+'/'+id,
+            method : 'GET'
+		}).done(this.proxy(function(attrs){
+         success( new this( attrs ) );
+      })
       }
     },{
       init : function(attrs){

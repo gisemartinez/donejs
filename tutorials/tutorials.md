@@ -1,3 +1,4 @@
+@hide
 @page tutorials Tutorials
 @parent index 4
 

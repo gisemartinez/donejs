@@ -22,4 +22,3 @@ The download will come with minified and unminified versions of jQuery and the p
     <script type='text/javascript' src='canjs-1.0.custom.js'></script> 
 
 Please continue to [mvc.construct can.Construct].
-w
