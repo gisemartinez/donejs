@@ -1,6 +1,6 @@
 [submodule "documentjs"]
 	path = documentjs
-	url = git://github.com:jupiterjs/documentjs.git
+	url = git://github.com/jupiterjs/documentjs.git
 [submodule "funcunit"]
 	path = funcunit
 	url = git://github.com/jupiterjs/funcunit.git
@@ -12,7 +12,7 @@
 	url = git://github.com/jupiterjs/canjs.git
 [submodule "canui"]
 	path = canui
-	url = git://github.com:jupiterjs/canui.git
+	url = git://github.com/jupiterjs/canui.git
 [submodule "jquery"]
 	path = jquery
-	url = git://github.com:jupiterjs/jquerypp.git
+	url = git://github.com/jupiterjs/jquerypp.git
