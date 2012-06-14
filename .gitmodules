@@ -16,3 +16,6 @@
 [submodule "jquery"]
 	path = jquery
 	url = git://github.com/jupiterjs/jquerypp.git
+[submodule "asado"]
+	path = asado
+	url = https://github.com/gisemartinez/asado.git
