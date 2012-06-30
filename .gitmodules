@@ -19,6 +19,3 @@
 [submodule "asado"]
 	path = asado
 	url = https://github.com/gisemartinez/asado.git
-[submodule "jquery-mobile"]
-	path = jquery-mobile
-	url = https://github.com/jquery/jquery-mobile.git
